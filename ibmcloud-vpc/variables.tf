@@ -1,3 +1,5 @@
+variable ibmcloud_api_key {}
+
 variable vpc_name {
     description = "Name of VPC"
 }
@@ -24,9 +26,16 @@ variable number_of_datacenters {
     }
 }
 
+variable number_of_splits {
+    description = "Number of bits ahead CIDR to break down the address prefixes"
+}
 variable bits_ahead_subnet {
     type = number
     description = "Number of bits for a subnet related to address prefix (i.e: if address_prefix is a /24 and this variable is 2, the subnet will be created as /26)"
 }
 
+variable tags {
+    type = list(string)
+    default = []
+}
 
