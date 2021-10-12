@@ -78,8 +78,8 @@ resource "ibm_is_vpc_routing_table_route" "routes_dc1" {
   zone = local.zone1
   name = "custom-route-${index(local.routing_tables_dc1, each.key)}"
   destination = split("-->", each.key)[0]
-  action = split("-->", each.key)[1] == "vpc" ? "delegate_vpc" : "deliver"
-  next_hop = split("-->", each.key)[1] == "vpc"? "0.0.0.0" : split("-->", each.key)[1] // Example value "10.0.0.4"
+  action = length(regexall("\\d", split("-->", each.key)[1])) > 0 ? "deliver" : split("-->", each.key)[1]
+  next_hop = length(regexall("\\d", split("-->", each.key)[1])) > 0 ? split("-->", each.key)[1] : "0.0.0.0" // Example value "10.0.0.4"
 }
 /* Routing table (DC2) */
 resource "ibm_is_vpc_routing_table" "routing_table_dc2" {
@@ -97,8 +97,8 @@ resource "ibm_is_vpc_routing_table_route" "routes_dc2" {
   zone = local.zone2
   name = "custom-route-${index(local.routing_tables_dc2, each.key)}"
   destination = split("-->", each.key)[0]
-  action = split("-->", each.key)[1] == "vpc" ? "delegate_vpc" : "deliver"
-  next_hop = split("-->", each.key)[1] == "vpc"? "0.0.0.0" : split("-->", each.key)[1] // Example value "10.0.0.4"
+  action = length(regexall("\\d", split("-->", each.key)[1])) > 0 ? "deliver" : split("-->", each.key)[1]
+  next_hop = length(regexall("\\d", split("-->", each.key)[1])) > 0 ? split("-->", each.key)[1] : "0.0.0.0" // Example value "10.0.0.4"
 }
 
 /* Routing table (DC3) */
@@ -118,8 +118,8 @@ resource "ibm_is_vpc_routing_table_route" "routes_dc3" {
   zone = local.zone3
   name = "custom-route-${index(local.routing_tables_dc3, each.key)}"
   destination = split("-->", each.key)[0]
-  action = split("-->", each.key)[1] == "vpc" ? "delegate_vpc" : "deliver"
-  next_hop = split("-->", each.key)[1] == "vpc"? "0.0.0.0" : split("-->", each.key)[1] // Example value "10.0.0.4"
+  action = length(regexall("\\d", split("-->", each.key)[1])) > 0 ? "deliver" : split("-->", each.key)[1]
+  next_hop = length(regexall("\\d", split("-->", each.key)[1])) > 0 ? split("-->", each.key)[1] : "0.0.0.0" // Example value "10.0.0.4"
 }
 
 /*  Subnet (DC1)*/
