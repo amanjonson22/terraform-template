@@ -49,6 +49,12 @@ variable routing_tables {
     description = "List of routing tables per datacenter. Each entry will be a map like this example: {cidr = '192.168.0.1/24' route_to = '192.168.0.254 or vpc to delegate to vpc'}"
 }
 
+variable routing_tables_by_subnet {
+    type = bool
+    default = false
+    description = "Flag to identify if the routes must be done by subnet (true) or by data center (false)"
+}
+
 variable cos_instance {
     description = "COS instance to configure Flow Logs"
     default = ""
