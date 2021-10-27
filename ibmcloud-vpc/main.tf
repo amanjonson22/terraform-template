@@ -105,7 +105,7 @@ resource ibm_is_vpc_address_prefix address_prefix_dc3 {
 resource "ibm_is_vpc_routing_table" "routing_table_dc1" {
   for_each = toset(local.routing_tables_dc1)
   vpc = ibm_is_vpc.vpc.id
-  name = "routing-table-${split("|",each.key)[0]}-${length(split("|",each.key)) > 1 ? format("-%s", split("|",each.key)[1]) : ""}"
+  name = "routing-table-${split("|",each.key)[0]}${length(split("|",each.key)) > 1 ? format("-%s", split("|",each.key)[1]) : ""}"
   route_direct_link_ingress = false
   route_transit_gateway_ingress = false
   route_vpc_zone_ingress = false
@@ -125,7 +125,7 @@ resource "ibm_is_vpc_routing_table_route" "routes_dc1" {
 resource "ibm_is_vpc_routing_table" "routing_table_dc2" {
   for_each = toset(local.routing_tables_dc2)
   vpc = ibm_is_vpc.vpc.id
-  name = "routing-table-${split("|",each.key)[0]}-${length(split("|",each.key)) > 1 ? format("-%s", split("|",each.key)[1]) : ""}"
+  name = "routing-table-${split("|",each.key)[0]}${length(split("|",each.key)) > 1 ? format("-%s", split("|",each.key)[1]) : ""}"
   route_direct_link_ingress = false
   route_transit_gateway_ingress = false
   route_vpc_zone_ingress = false
@@ -147,7 +147,7 @@ resource "ibm_is_vpc_routing_table_route" "routes_dc2" {
 resource "ibm_is_vpc_routing_table" "routing_table_dc3" {
   for_each = toset(local.routing_tables_dc3)
   vpc = ibm_is_vpc.vpc.id
-  name = "routing-table-${split("|",each.key)[0]}-${length(split("|",each.key)) > 1 ? format("-%s", split("|",each.key)[1]) : ""}"
+  name = "routing-table-${split("|",each.key)[0]}${length(split("|",each.key)) > 1 ? format("-%s", split("|",each.key)[1]) : ""}"
   route_direct_link_ingress = false
   route_transit_gateway_ingress = false
   route_vpc_zone_ingress = false
