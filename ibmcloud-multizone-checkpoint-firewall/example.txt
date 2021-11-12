@@ -1,0 +1,62 @@
+/* SSH Key */
+resource ibm_is_ssh_key infra_keys {
+    name = "fw-infra-keys"
+    public_key = local.public_key
+    resource_group = data.ibm_resource_group.resource_group_networking.id
+    tags = local.tags
+  }
+
+  /*  Data sources for internal and external networks */
+  data ibm_is_subnet internal_subnets {
+     depends_on = [
+       module.vpc_hub
+     ]
+     for_each = toset(["vpc-subnet-br-sao-dc1-ingress", "vpc-subnet-br-sao-dc2-ingress"])
+     name     = each.key
+  }
+
+  data ibm_is_subnet external_subnets {
+    depends_on = [
+      module.vpc_hub
+    ]
+     for_each = toset(["vpc-subnet-br-sao-dc1-egress", "vpc-subnet-br-sao-dc2-egress"])
+     name     = each.key
+  }
+
+  locals {
+    vpc_hub_internal_subnets = [
+       data.ibm_is_subnet.internal_subnets["vpc-subnet-br-sao-dc1-ingress"].id,
+       data.ibm_is_subnet.internal_subnets["vpc-subnet-br-sao-dc2-ingress"].id
+    ]
+
+    vpc_hub_external_subnets = [
+       data.ibm_is_subnet.external_subnets["vpc-subnet-br-sao-dc1-egress"].id,
+       data.ibm_is_subnet.external_subnets["vpc-subnet-br-sao-dc2-egress"].id
+    ]
+
+    vpc_zones_fw_deploy = ["br-sao-1"]
+    non_prod_fw_profile = "bx2-4x16"
+    prod_fw_profile = "cx2-8x16"
+    public_key = var.public_key
+  }
+  
+  /* Internal firewall (Non-PROD) */
+  module fw_interno_nao_prod {
+     count = local.deploy_firewall == true ? 1 : 0
+    depends_on = [
+      ibm_is_ssh_key.infra_keys
+    ]
+     source = "../terraform-common-templates/ibmcloud-multizone-checkpoint-firewall"
+     vpc_zones = local.vpc_zones_fw_deploy
+     vpc_name = "vpc-diti-core-hub"
+     vpc_subnet_ids = local.vpc_hub_internal_subnets
+     resource_group = local.rg_name
+     firewall_ssh_key = ibm_is_ssh_key.infra_keys.name
+     firewall_security_groups = ["sg-interno-nprod-dc1","sg-interno-nprod-dc2"]
+     firewall_profile = local.non_prod_fw_profile
+     ibmcloud_api_key = var.ibmcloud_api_key
+     firewall_prefix_name = "fw-interno-nprod"
+     load_balancer_prefix_name = "lb-interno-nprod"
+     tags = local.tags
+     firewall_version = "R8040"
+  }
