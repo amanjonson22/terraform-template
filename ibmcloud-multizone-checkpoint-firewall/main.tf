@@ -12,7 +12,7 @@ locals {
     firewall_ssh_key = var.firewall_ssh_key
     firewall_security_groups = var.firewall_security_groups
 
-    health_check_fw_port = 8117
+    health_check_fw_port = 443
     firewall_version = var.firewall_version
     
     firewall_profile = var.firewall_profile
