@@ -53,3 +53,8 @@ variable tags {
     default = []
     description = "Tags to insert on provisioned resources"
 }
+
+variable firewall_version {
+    default = "R81"
+    description = "Checkpoint firewall version to deploy (R8040/R81)"
+}

@@ -13,7 +13,7 @@ locals {
     firewall_security_groups = var.firewall_security_groups
 
     health_check_fw_port = 8117
-    firewall_version = "R81"
+    firewall_version = var.firewall_version
     
     firewall_profile = var.firewall_profile
     firewall_prefix_name = var.firewall_prefix_name
@@ -34,7 +34,7 @@ data ibm_resource_group resource_group {
 /* Firewall Checkpoint Module (for_each DC) */
 module gateways {
     for_each = toset(local.vpc_zones)
-    source = "../../checkpoint-iaas-cluster-ibm-vpc"
+    source = "github.com/marcosbv/checkpoint-iaas-cluster-ibm-vpc"
     VPC_Region = local.region
     VPC_Name = local.vpc_name
     Resource_Group = local.resource_group
@@ -72,14 +72,15 @@ resource ibm_is_lb_pool load_balancer_pool {
     health_monitor_port = local.health_check_fw_port
     health_retries = 3
     health_delay = 5
-    health_timeout = 2  
+    health_timeout = 2
+    session_persistence_type = "source_ip"
 }
 
 resource ibm_is_lb_pool_member load_balancer_primary_members {
    for_each = toset(local.vpc_zones)
    lb = ibm_is_lb.load_balancer[each.key].id
    pool = ibm_is_lb_pool.load_balancer_pool[each.key].id
-   port = 90
+   port = 443
    target_id = module.gateways[each.key].firewall_instance_ids[0]
 }
 
@@ -87,7 +88,7 @@ resource ibm_is_lb_pool_member load_balancer_secondary_members {
    for_each = toset(local.vpc_zones)
    lb = ibm_is_lb.load_balancer[each.key].id
    pool = ibm_is_lb_pool.load_balancer_pool[each.key].id
-   port = 90
+   port = 443
    target_id = module.gateways[each.key].firewall_instance_ids[1]
 }
 
