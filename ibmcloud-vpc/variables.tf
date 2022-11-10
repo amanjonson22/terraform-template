@@ -14,7 +14,7 @@ variable vpc_subnet {
 
 variable region {
     description = "Region to deploy"
-    default = "br-sao"
+    default = "us-south"
 }
 
 variable bits_ahead_subnet {
@@ -42,9 +42,9 @@ variable address_prefixes {
 variable routing_tables {
     type = map(list(string))
     default = {
-       "br-sao-1" =[],
-       "br-sao-2" = [],
-       "br-sao-3" = []
+       "us-south-1" =[],
+       "us-south-2" = [],
+       "us-south-3" = []
     }
     description = "List of routing tables per datacenter. Each entry will be a map like this example: {cidr = '192.168.0.1/24' route_to = '192.168.0.254 or vpc to delegate to vpc'}"
 }
