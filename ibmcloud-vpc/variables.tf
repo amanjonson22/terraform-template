@@ -42,9 +42,9 @@ variable address_prefixes {
 variable routing_tables {
     type = map(list(string))
     default = {
-       "us-south-1" =[],
-       "us-south-2" = [],
-       "us-south-3" = []
+       "sa-east-1" =[],
+       "sa-east-2" = [],
+       "sa-east-3" = []
     }
     description = "List of routing tables per datacenter. Each entry will be a map like this example: {cidr = '192.168.0.1/24' route_to = '192.168.0.254 or vpc to delegate to vpc'}"
 }
